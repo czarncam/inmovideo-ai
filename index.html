@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>InmoVideo AI Studio Pro</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <!-- Cliente Gradio para conectar directo a los servidores de Hugging Face -->
+  <script type="module">
+    import { client } from "https://cdn.jsdelivr.net/npm/@gradio/client/+esm";
+    window.GradioClient = client;
+  </script>
   <style>
     :root {
       --bg-color: #0d1117;
@@ -38,7 +43,7 @@
     .btn-generate { width: 100%; background: var(--accent-color); color: white; border: none; padding: 14px; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
     .btn-generate:hover { background: var(--accent-hover); }
 
-    .status-box { margin-top: 20px; text-align: center; font-size: 0.9rem; color: var(--accent-hover); display: none; }
+    .status-box { margin-top: 20px; text-align: center; font-size: 0.9rem; color: var(--accent-hover); display: none; line-height: 1.4; }
     .video-container { margin-top: 25px; display: none; text-align: center; }
     video { width: 100%; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 15px; }
     
@@ -72,12 +77,12 @@
     <button class="btn-generate" onclick="processVideo()">Generar Video Cinematográfico</button>
 
     <div class="status-box" id="statusBox">
-      ⚡ Procesando en servidores nubes de alto rendimiento... Esto puede tomar entre 30 y 60 segundos.
+      ⚙️ Conectando con servidor GPU público... Procesando animación (tomará ~1 minuto).
     </div>
 
     <div class="video-container" id="videoContainer">
-      <video id="outputVideo" controls loop></video>
-      <a id="downloadBtn" class="btn-download" download="recorrido_inmobiliario.mp4">Descargar Video MP4</a>
+      <video id="outputVideo" controls loop autoplay muted></video>
+      <a id="downloadBtn" class="btn-download" download="recorrido_inmobiliario.mp4" target="_blank">Descargar Video MP4</a>
     </div>
   </div>
 
@@ -94,6 +99,9 @@
       const fileInput = document.getElementById('imageInput');
       const statusBox = document.getElementById('statusBox');
       const videoContainer = document.getElementById('videoContainer');
+      const outputVideo = document.getElementById('outputVideo');
+      const downloadBtn = document.getElementById('downloadBtn');
+      const promptText = document.getElementById('cameraMotion').value;
 
       if (!fileInput.files[0]) {
         alert("Por favor selecciona una fotografía de la propiedad.");
@@ -103,11 +111,32 @@
       statusBox.style.display = "block";
       videoContainer.style.display = "none";
 
-      // Simulación de respuesta o conexión con cliente de Gradio / Hugging Face
-      setTimeout(() => {
-        statusBox.style.display = "none";
-        videoContainer.style.display = "block";
-      }, 5000);
+      try {
+        // Conexión directa al cliente Gradio de Hugging Face
+        const app = await window.GradioClient.connect("Wan-Video/Wan2.1-I2V-14B-720P");
+        
+        statusBox.innerText = "🚀 Generando cuadros de video en la nube... No cierres esta ventana.";
+
+        const result = await app.predict("/generate", [
+          fileInput.files[0], 
+          promptText
+        ]);
+
+        if (result && result.data) {
+          const videoUrl = result.data[0].url || result.data[0];
+          outputVideo.src = videoUrl;
+          downloadBtn.href = videoUrl;
+          
+          statusBox.style.display = "none";
+          videoContainer.style.display = "block";
+        } else {
+          throw new Error("No se recibió respuesta válida del servidor.");
+        }
+
+      } catch (error) {
+        console.error(error);
+        statusBox.innerText = "⚠️ El servidor público está saturado o procesando otra solicitud. Intenta presionar el botón de nuevo en unos segundos.";
+      }
     }
   </script>
 
