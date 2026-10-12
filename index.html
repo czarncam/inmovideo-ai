@@ -5,140 +5,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>InmoVideo AI Studio Pro</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <!-- Cliente Gradio para conectar directo a los servidores de Hugging Face -->
-  <script type="module">
-    import { client } from "https://cdn.jsdelivr.net/npm/@gradio/client/+esm";
-    window.GradioClient = client;
-  </script>
   <style>
     :root {
       --bg-color: #0d1117;
       --card-bg: #161b22;
       --accent-color: #2f81f7;
-      --accent-hover: #58a6ff;
       --text-main: #f0f6fc;
       --text-muted: #8b949e;
       --border-color: #30363d;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-    body { background-color: var(--bg-color); color: var(--text-main); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+    body { background-color: var(--bg-color); color: var(--text-main); display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; }
     
-    .container { background: var(--card-bg); width: 100%; max-width: 520px; padding: 30px; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-    
-    .header { text-align: center; margin-bottom: 25px; }
-    .header h1 { font-size: 1.6rem; font-weight: 700; color: var(--text-main); }
-    .header p { font-size: 0.9rem; color: var(--text-muted); margin-top: 6px; }
+    .header { text-align: center; margin-bottom: 20px; max-width: 800px; }
+    .header h1 { font-size: 1.8rem; font-weight: 700; color: var(--text-main); }
+    .header p { font-size: 0.95rem; color: var(--text-muted); margin-top: 6px; }
 
-    .upload-box { border: 2px dashed var(--border-color); border-radius: 12px; padding: 25px; text-align: center; cursor: pointer; transition: 0.3s; margin-bottom: 20px; }
-    .upload-box:hover { border-color: var(--accent-color); background: rgba(47, 129, 247, 0.05); }
-    .upload-box input { display: none; }
-    .upload-label { font-size: 0.95rem; color: var(--accent-hover); cursor: pointer; font-weight: 600; }
+    .app-container {
+      width: 100%;
+      max-width: 1000px;
+      height: 850px;
+      background: var(--card-bg);
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      overflow: hidden;
+    }
 
-    .form-group { margin-bottom: 20px; text-align: left; }
-    label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 8px; }
-    select, textarea { width: 100%; background: #0d1117; border: 1px solid var(--border-color); color: var(--text-main); padding: 12px; border-radius: 8px; font-size: 0.9rem; outline: none; }
-    select:focus, textarea:focus { border-color: var(--accent-color); }
-
-    .btn-generate { width: 100%; background: var(--accent-color); color: white; border: none; padding: 14px; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
-    .btn-generate:hover { background: var(--accent-hover); }
-
-    .status-box { margin-top: 20px; text-align: center; font-size: 0.9rem; color: var(--accent-hover); display: none; line-height: 1.4; }
-    .video-container { margin-top: 25px; display: none; text-align: center; }
-    video { width: 100%; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 15px; }
-    
-    .btn-download { display: inline-block; width: 100%; text-decoration: none; background: #238636; color: white; padding: 12px; border-radius: 8px; font-weight: 700; text-align: center; transition: 0.2s; }
-    .btn-download:hover { background: #2ea043; }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <div class="header">
-      <h1>InmoVideo AI Studio</h1>
-      <p>Transforma fotografías inmobiliarias en Recorridos 3D Cinematográficos</p>
-    </div>
-
-    <div class="upload-box" onclick="document.getElementById('imageInput').click()">
-      <span class="upload-label">📸 Haz clic para subir la imagen de la propiedad</span>
-      <input type="file" id="imageInput" accept="image/*" onchange="updateFileName(this)">
-      <p id="fileName" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">Formatos recomendados: JPG, PNG</p>
-    </div>
-
-    <div class="form-group">
-      <label>Estilo de Movimiento de Cámara</label>
-      <select id="cameraMotion">
-        <option value="Slow cinematic camera zoom in into the room, smooth movement, 4k high detail">Acercamiento Lento (Zoom In)</option>
-        <option value="Slow cinematic camera pan right showing room space, high quality">Panorámica Horizontal (Pan Right)</option>
-        <option value="Cinematic smooth camera flythrough, luxury real estate presentation">Recorrido Volado (Flythrough)</option>
-      </select>
-    </div>
-
-    <button class="btn-generate" onclick="processVideo()">Generar Video Cinematográfico</button>
-
-    <div class="status-box" id="statusBox">
-      ⚙️ Conectando con servidor GPU público... Procesando animación (tomará ~1 minuto).
-    </div>
-
-    <div class="video-container" id="videoContainer">
-      <video id="outputVideo" controls loop autoplay muted></video>
-      <a id="downloadBtn" class="btn-download" download="recorrido_inmobiliario.mp4" target="_blank">Descargar Video MP4</a>
-    </div>
+  <div class="header">
+    <h1>InmoVideo AI Studio</h1>
+    <p>Generador de recorridos virtuales 3D desde fotografías para el sector inmobiliario</p>
   </div>
 
-  <script>
-    function updateFileName(input) {
-      const fileName = document.getElementById('fileName');
-      if (input.files && input.files[0]) {
-        fileName.innerText = "Imagen seleccionada: " + input.files[0].name;
-        fileName.style.color = "#58a6ff";
-      }
-    }
-
-    async function processVideo() {
-      const fileInput = document.getElementById('imageInput');
-      const statusBox = document.getElementById('statusBox');
-      const videoContainer = document.getElementById('videoContainer');
-      const outputVideo = document.getElementById('outputVideo');
-      const downloadBtn = document.getElementById('downloadBtn');
-      const promptText = document.getElementById('cameraMotion').value;
-
-      if (!fileInput.files[0]) {
-        alert("Por favor selecciona una fotografía de la propiedad.");
-        return;
-      }
-
-      statusBox.style.display = "block";
-      videoContainer.style.display = "none";
-
-      try {
-        // Conexión directa al cliente Gradio de Hugging Face
-        const app = await window.GradioClient.connect("Wan-Video/Wan2.1-I2V-14B-720P");
-        
-        statusBox.innerText = "🚀 Generando cuadros de video en la nube... No cierres esta ventana.";
-
-        const result = await app.predict("/generate", [
-          fileInput.files[0], 
-          promptText
-        ]);
-
-        if (result && result.data) {
-          const videoUrl = result.data[0].url || result.data[0];
-          outputVideo.src = videoUrl;
-          downloadBtn.href = videoUrl;
-          
-          statusBox.style.display = "none";
-          videoContainer.style.display = "block";
-        } else {
-          throw new Error("No se recibió respuesta válida del servidor.");
-        }
-
-      } catch (error) {
-        console.error(error);
-        statusBox.innerText = "⚠️ El servidor público está saturado o procesando otra solicitud. Intenta presionar el botón de nuevo en unos segundos.";
-      }
-    }
-  </script>
+  <div class="app-container">
+    <!-- Motor de IA procesado en la nube pública de alta estabilidad -->
+    <iframe src="https://fffiloni-wan-2-1-image-to-video.hf.space" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  </div>
 
 </body>
 </html>
