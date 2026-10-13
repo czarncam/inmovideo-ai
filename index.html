@@ -10,46 +10,69 @@
       --bg-color: #0d1117;
       --card-bg: #161b22;
       --accent-color: #2f81f7;
+      --accent-hover: #58a6ff;
       --text-main: #f0f6fc;
       --text-muted: #8b949e;
       --border-color: #30363d;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-    body { background-color: var(--bg-color); color: var(--text-main); display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; }
+    body { background-color: var(--bg-color); color: var(--text-main); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
     
-    .header { text-align: center; margin-bottom: 20px; max-width: 800px; }
-    .header h1 { font-size: 1.8rem; font-weight: 700; color: var(--text-main); }
-    .header p { font-size: 0.95rem; color: var(--text-muted); margin-top: 6px; }
+    .container { background: var(--card-bg); width: 100%; max-width: 600px; padding: 40px; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; }
+    
+    h1 { font-size: 1.8rem; font-weight: 700; color: var(--text-main); margin-bottom: 10px; }
+    p { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 30px; line-height: 1.5; }
 
-    .app-container {
-      width: 100%;
-      max-width: 1000px;
-      height: 850px;
-      background: var(--card-bg);
-      border-radius: 16px;
-      border: 1px solid var(--border-color);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      overflow: hidden;
-    }
+    .btn-group { display: flex; flex-direction: column; gap: 15px; }
 
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
+    .btn { 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      gap: 12px; 
+      background: var(--accent-color); 
+      color: white; 
+      text-decoration: none; 
+      padding: 16px; 
+      border-radius: 10px; 
+      font-size: 1.05rem; 
+      font-weight: 600; 
+      transition: 0.2s; 
+      border: 1px solid rgba(255,255,255,0.1);
     }
+    
+    .btn:hover { background: var(--accent-hover); transform: translateY(-2px); }
+    .btn.secondary { background: #21262d; border-color: var(--border-color); }
+    .btn.secondary:hover { background: #30363d; }
+
+    .footer-note { margin-top: 25px; font-size: 0.8rem; color: var(--text-muted); }
   </style>
 </head>
 <body>
 
-  <div class="header">
+  <div class="container">
     <h1>InmoVideo AI Studio</h1>
-    <p>Generador de recorridos virtuales 3D desde fotografías para el sector inmobiliario</p>
-  </div>
+    <p>Centro de control inmobiliario para transformar fotografías en recorridos virtuales 3D y edición profesional en la nube (Sin descargas ni costos).</p>
 
-  <div class="app-container">
-    <!-- Motor de IA procesado en la nube pública de alta estabilidad -->
-    <iframe src="https://fffiloni-wan-2-1-image-to-video.hf.space" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <div class="btn-group">
+      <!-- Acceso directo al mejor Space activo en la nube de IA -->
+      <a href="https://huggingface.co/spaces/Wan-Video/Wan2.1-I2V-14B-720P" target="_blank" class="btn">
+        🎬 Motor 1: Generar Video Inmobiliario (Wan2.1 Cloud)
+      </a>
+
+      <a href="https://huggingface.co/spaces/stabilityai/stable-diffusion-xl" target="_blank" class="btn secondary">
+        🖼️ Motor 2: Crear Renders y Fotos desde Texto
+      </a>
+
+      <a href="https://www.canva.com" target="_blank" class="btn secondary">
+        ✨ Ir a Canva (Para Logos, Subtítulos y Audio por IA)
+      </a>
+    </div>
+
+    <div class="footer-note">
+      Plataforma interna optimizada para asesores inmobiliarios. 100% gratuita y ejecutada en servidores remotos.
+    </div>
   </div>
 
 </body>
