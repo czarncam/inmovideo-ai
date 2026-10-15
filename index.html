@@ -19,13 +19,13 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
     body { background-color: var(--bg-color); color: var(--text-main); display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; }
     
-    nav { width: 100%; max-width: 700px; display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; margin-bottom: 25px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; }
+    nav { width: 100%; max-width: 750px; display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; margin-bottom: 25px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; }
     .logo { font-size: 1.1rem; font-weight: 700; color: #60a5fa; }
-    .nav-links { display: flex; gap: 10px; }
-    .nav-btn { background: transparent; border: none; color: var(--text-muted); font-size: 0.85rem; font-weight: 600; cursor: pointer; padding: 8px 14px; border-radius: 8px; transition: 0.2s; }
+    .nav-links { display: flex; gap: 6px; flex-wrap: wrap; }
+    .nav-btn { background: transparent; border: none; color: var(--text-muted); font-size: 0.8rem; font-weight: 600; cursor: pointer; padding: 8px 12px; border-radius: 8px; transition: 0.2s; }
     .nav-btn.active, .nav-btn:hover { color: white; background: var(--accent-color); }
 
-    .container { background: var(--card-bg); width: 100%; max-width: 700px; padding: 35px; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 15px 35px rgba(0,0,0,0.5); text-align: center; }
+    .container { background: var(--card-bg); width: 100%; max-width: 750px; padding: 35px; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 15px 35px rgba(0,0,0,0.5); text-align: center; }
     
     .tab-content { display: none; }
     .tab-content.active { display: block; }
@@ -56,8 +56,9 @@
   <nav>
     <div class="logo">🏢 InmoVideo AI Studio</div>
     <div class="nav-links">
-      <button class="nav-btn active" onclick="switchTab('img2txt', event)">Generador de Renders</button>
-      <button class="nav-btn" onclick="switchTab('img2vid', event)">Animador Inmobiliario</button>
+      <button class="nav-btn active" onclick="switchTab('img2txt', event)">Renders</button>
+      <button class="nav-btn" onclick="switchTab('img2vid', event)">Foto Individual</button>
+      <button class="nav-btn" onclick="switchTab('autoreel', event)">🎬 Auto-Reel Múltiple</button>
     </div>
   </nav>
 
@@ -83,10 +84,10 @@
       </div>
     </div>
 
-    <!-- SECCIÓN 2: Animador Cinemático (Exactamente 5 Segundos Garantizados) -->
+    <!-- SECCIÓN 2: Animador Foto Individual (5 Segundos) -->
     <div id="img2vid" class="tab-content">
       <h1>Animador Cinemático 3D (5 Segundos)</h1>
-      <p>Sube la foto de la propiedad para aplicarle movimientos de cámara profesionales y fluidos.</p>
+      <p>Sube una foto para aplicarle movimiento de cámara profesional.</p>
 
       <div class="upload-box" onclick="document.getElementById('videoImageInput').click()">
         <span style="color: #60a5fa; font-weight: 600; font-size: 0.95rem;">📸 Cargar fotografía de la propiedad</span>
@@ -95,28 +96,50 @@
       </div>
 
       <div class="form-group">
-        <label>Movimiento de Cámara Profesional:</label>
+        <label>Movimiento de Cámara:</label>
         <select id="cameraMotion">
           <option value="zoomIn">Acercamiento Elegante (Zoom In)</option>
           <option value="zoomOut">Alejamiento de Espacio (Zoom Out)</option>
-          <option value="panRight">Panorámica Horizontal Derecha (Pan Right)</option>
-          <option value="panLeft">Panorámica Horizontal Izquierda (Pan Left)</option>
+          <option value="panRight">Panorámica Horizontal Derecha</option>
+          <option value="panLeft">Panorámica Horizontal Izquierda</option>
           <option value="tiltUp">Efecto Dron Ascendente (Tilt Up)</option>
         </select>
       </div>
 
-      <button class="btn-action" onclick="createCinematicVideo()">Generar Video (5 Segundos)</button>
+      <button class="btn-action" onclick="createCinematicVideo()">Generar Video (5s)</button>
 
-      <div id="statusVid" class="status">🎬 Renderizando video cinemático de 5 segundos exactos...</div>
+      <div id="statusVid" class="status">🎬 Renderizando video cinemático...</div>
       
       <div id="resultVid" class="result-box">
-        <canvas id="renderCanvas" style="display:none;"></canvas>
         <video id="outputVideo" controls autoplay loop></video>
-        <a id="downloadVideoBtn" class="btn-action" style="display:none; margin-top:15px; text-decoration:none; text-align:center; background:#10b981;" download="recorrido_inmobiliario_5s.webm">Descargar Video MP4/WebM</a>
+        <a id="downloadVideoBtn" class="btn-action" style="display:none; margin-top:15px; text-decoration:none; text-align:center; background:#10b981;" download="recorrido_inmobiliario_5s.webm">Descargar Video</a>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 3: NUEVO AUTO-REEL MÚLTIPLE (Varios segundos por imagen + transiciones) -->
+    <div id="autoreel" class="tab-content">
+      <h1>Generador Auto-Reel Inmobiliario</h1>
+      <p>Sube varias fotos de la propiedad a la vez. El sistema creará un recorrido completo uniendo todas con movimiento y transiciones.</p>
+
+      <div class="upload-box" onclick="document.getElementById('multiImageInput').click()">
+        <span style="color: #60a5fa; font-weight: 600; font-size: 0.95rem;">📁 Seleccionar varias fotos de la casa (2 o más)</span>
+        <input type="file" id="multiImageInput" accept="image/*" multiple onchange="previewMultiFiles(this)">
+        <p id="multiCount" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">Ninguna imagen seleccionada</p>
+      </div>
+
+      <button class="btn-action" onclick="createAutoReel()">Generar Auto-Reel Completo</button>
+
+      <div id="statusReel" class="status">🎬 Uniendo imágenes y aplicando transiciones y zoom (3s c/u)...</div>
+      
+      <div id="resultReel" class="result-box">
+        <video id="outputReelVideo" controls autoplay loop></video>
+        <a id="downloadReelBtn" class="btn-action" style="display:none; margin-top:15px; text-decoration:none; text-align:center; background:#10b981;" download="inmovideo_autoreel.webm">Descargar Auto-Reel MP4/WebM</a>
       </div>
     </div>
 
   </div>
+
+  <canvas id="renderCanvas" style="display:none;"></canvas>
 
   <script>
     function switchTab(tabId, evt) {
@@ -132,17 +155,40 @@
         const reader = new FileReader();
         reader.onload = function(e) {
           loadedImage = new Image();
-          loadedImage.onload = function() {
-            document.getElementById('imgName').innerText = "Imagen cargada: " + input.files[0].name;
-            document.getElementById('imgName').style.color = "#10b981";
-          }
           loadedImage.src = e.target.result;
+          document.getElementById('imgName').innerText = "Imagen cargada: " + input.files[0].name;
+          document.getElementById('imgName').style.color = "#10b981";
         }
         reader.readAsDataURL(input.files[0]);
       }
     }
 
-    // Generador de imágenes optimizado sin errores de cuota
+    let multiImagesLoaded = [];
+    function previewMultiFiles(input) {
+      if (input.files && input.files.length > 0) {
+        multiImagesLoaded = [];
+        let loadedCount = 0;
+        
+        Array.from(input.files).forEach(file => {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() {
+              multiImagesLoaded.push(img);
+              loadedCount++;
+              if(loadedCount === input.files.length) {
+                document.getElementById('multiCount').innerText = `${loadedCount} imágenes listas para el Auto-Reel.`;
+                document.getElementById('multiCount').style.color = "#10b981";
+              }
+            };
+            img.src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+    }
+
+    // Generador de Renders robusto con doble respaldo de URL pública
     function generateAIImage() {
       const prompt = document.getElementById('promptText').value;
       const status = document.getElementById('statusImg');
@@ -158,8 +204,8 @@
       status.style.display = 'block';
       resultBox.style.display = 'none';
 
-      // Uso de codificación limpia con timestamp para evitar bloqueos por caché
-      const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=576&nologo=true&t=${Date.now()}`;
+      // Servidor alternativo optimizado para evitar bloqueos
+      const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=576&nologo=true&seed=${Math.floor(Math.random() * 100000)}`;
       
       const img = new Image();
       img.crossOrigin = "anonymous";
@@ -171,12 +217,16 @@
         resultBox.style.display = 'block';
       };
       img.onerror = () => {
+        // Segundo intento con otro endpoint si el primero falla
+        const fallbackUrl = `https://pollinations.ai/p/${encodeURIComponent(prompt)}?width=1024&height=576&nologo=true`;
+        outputImg.src = fallbackUrl;
+        downloadBtn.href = fallbackUrl;
         status.style.display = 'none';
-        alert("Error al conectar con el servidor de render. Intenta de nuevo.");
+        resultBox.style.display = 'block';
       };
     }
 
-    // Animador con duración estricta de 5 segundos reales usando control por tiempo
+    // Animador Foto Individual (5 Segundos)
     function createCinematicVideo() {
       if (!loadedImage) {
         alert("Por favor selecciona una fotografía primero.");
@@ -198,8 +248,7 @@
       canvas.height = 720;
 
       const fps = 30;
-      const durationMs = 5000; // 5 segundos exactos en milisegundos
-      const totalFrames = (fps * durationMs) / 1000;
+      const durationMs = 5000;
       let startTime = null;
 
       const stream = canvas.captureStream(fps);
@@ -227,7 +276,7 @@
       function renderLoop(timestamp) {
         if (!startTime) startTime = timestamp;
         const elapsed = timestamp - startTime;
-        const progress = Math.min(elapsed / durationMs, 1); // Va de 0.0 a 1.0 exactamente en 5 segundos
+        const progress = Math.min(elapsed / durationMs, 1);
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -262,14 +311,111 @@
         if (progress < 1) {
           requestAnimationFrame(renderLoop);
         } else {
-          // Asegurar que grabe exactamente los 5 segundos antes de detener
-          setTimeout(() => {
-            recorder.stop();
-          }, 200);
+          setTimeout(() => { recorder.stop(); }, 200);
         }
       }
 
       requestAnimationFrame(renderLoop);
+    }
+
+    // NUEVO: Motor Auto-Reel para múltiples imágenes con transiciones cruzadas y 3 segundos cada una
+    function createAutoReel() {
+      if (!multiImagesLoaded || multiImagesLoaded.length === 0) {
+        alert("Por favor selecciona al menos 2 imágenes para crear el Auto-Reel.");
+        return;
+      }
+
+      const status = document.getElementById('statusReel');
+      const resultReel = document.getElementById('resultReel');
+      const canvas = document.getElementById('renderCanvas');
+      const outputVideo = document.getElementById('outputReelVideo');
+      const downloadBtn = document.getElementById('downloadReelBtn');
+
+      status.style.display = 'block';
+      resultReel.style.display = 'none';
+
+      const ctx = canvas.getContext('2d');
+      canvas.width = 1280;
+      canvas.height = 720;
+
+      const fps = 30;
+      const secondsPerImage = 3; // 3 segundos por foto
+      const transitionSeconds = 0.6; // Transición fluida de desvanecimiento
+      const totalImages = multiImagesLoaded.length;
+      
+      let currentImgIdx = 0;
+      let frameInImg = 0;
+      const totalFramesPerImg = fps * secondsPerImage;
+      const transitionFrames = fps * transitionSeconds;
+
+      const stream = canvas.captureStream(fps);
+      let recorder;
+      try {
+        recorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9' });
+      } catch (e) {
+        recorder = new MediaRecorder(stream);
+      }
+
+      const chunks = [];
+      recorder.ondataavailable = e => chunks.push(e.data);
+      recorder.onstop = () => {
+        const blob = new Blob(chunks, { type: 'video/webm' });
+        const videoUrl = URL.createObjectURL(blob);
+        outputVideo.src = videoUrl;
+        downloadBtn.href = videoUrl;
+        downloadBtn.style.display = 'block';
+        status.style.display = 'none';
+        resultReel.style.display = 'block';
+      };
+
+      recorder.start();
+
+      function drawReelFrame() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const currentImg = multiImagesLoaded[currentImgIdx];
+        const progress = frameInImg / totalFramesPerImg;
+
+        // Movimiento dinámico alternado por foto (Zoom in / Pan)
+        let scale = 1 + (progress * 0.15);
+        let offsetX = (canvas.width * (1 - scale)) / 2;
+        let offsetY = (canvas.height * (1 - scale)) / 2;
+
+        if (currentImgIdx % 2 === 1) {
+          // Si es impar, hacemos paneo horizontal sutil
+          scale = 1.12;
+          offsetX = - (progress * 100);
+          offsetY = -5;
+        }
+
+        // Dibujar imagen actual con control de opacidad para transición de entrada
+        ctx.save();
+        if (frameInImg < transitionFrames && currentImgIdx > 0) {
+          ctx.globalAlpha = frameInImg / transitionFrames;
+        }
+        // Transición de salida hacia la siguiente imagen
+        else if (frameInImg > totalFramesPerImg - transitionFrames && currentImgIdx < totalImages - 1) {
+          ctx.globalAlpha = (totalFramesPerImg - frameInImg) / transitionFrames;
+        }
+
+        ctx.drawImage(currentImg, offsetX, offsetY, canvas.width * scale, canvas.height * scale);
+        ctx.restore();
+
+        frameInImg++;
+
+        if (frameInImg >= totalFramesPerImg) {
+          frameInImg = 0;
+          currentImgIdx++;
+        }
+
+        if (currentImgIdx < totalImages) {
+          requestAnimationFrame(drawReelFrame);
+        } else {
+          setTimeout(() => { recorder.stop(); }, 300);
+        }
+      }
+
+      drawReelFrame();
     }
   </script>
 
