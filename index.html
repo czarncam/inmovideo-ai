@@ -63,7 +63,7 @@
 
   <div class="container">
     
-    <!-- SECCIÓN 1: Renders IA (Con respaldo multiservidor) -->
+    <!-- SECCIÓN 1: Renders IA -->
     <div id="img2txt" class="tab-content active">
       <h1>Estudio de Renders Inmobiliarios</h1>
       <p>Diseña visualizaciones fotorrealistas escribiendo una descripción del espacio.</p>
@@ -83,10 +83,10 @@
       </div>
     </div>
 
-    <!-- SECCIÓN 2: Animador Cinemático Local (Funcionando al 100%) -->
+    <!-- SECCIÓN 2: Animador Cinemático con 5 Opciones y Duración Extendida -->
     <div id="img2vid" class="tab-content">
-      <h1>Animador Cinemático 3D</h1>
-      <p>Sube la foto de la propiedad para aplicarle movimiento de cámara profesional instantáneo.</p>
+      <h1>Animador Cinemático 3D (5 Segundos)</h1>
+      <p>Sube la foto de la propiedad para aplicarle movimientos de cámara profesionales y fluidos.</p>
 
       <div class="upload-box" onclick="document.getElementById('videoImageInput').click()">
         <span style="color: #60a5fa; font-weight: 600; font-size: 0.95rem;">📸 Cargar fotografía de la propiedad</span>
@@ -95,21 +95,24 @@
       </div>
 
       <div class="form-group">
-        <label>Movimiento de Cámara:</label>
+        <label>Movimiento de Cámara Profesional:</label>
         <select id="cameraMotion">
           <option value="zoomIn">Acercamiento Elegante (Zoom In)</option>
-          <option value="panRight">Panorámica Desplazada (Pan Horizontal)</option>
+          <option value="zoomOut">Alejamiento de Espacio (Zoom Out)</option>
+          <option value="panRight">Panorámica Horizontal Derecha (Pan Right)</option>
+          <option value="panLeft">Panorámica Horizontal Izquierda (Pan Left)</option>
+          <option value="tiltUp">Efecto Dron Ascendente (Tilt Up)</option>
         </select>
       </div>
 
-      <button class="btn-action" onclick="createCinematicVideo()">Generar Video Animado MP4</button>
+      <button class="btn-action" onclick="createCinematicVideo()">Generar Video (5 Segundos)</button>
 
-      <div id="statusVid" class="status">🎬 Renderizando video fluido en tu dispositivo...</div>
+      <div id="statusVid" class="status">🎬 Renderizando video cinemático de 5 segundos...</div>
       
       <div id="resultVid" class="result-box">
         <canvas id="renderCanvas" style="display:none;"></canvas>
         <video id="outputVideo" controls autoplay loop></video>
-        <a id="downloadVideoBtn" class="btn-action" style="display:none; margin-top:15px; text-decoration:none; text-align:center; background:#10b981;" download="recorrido_inmobiliario.webm">Descargar Video</a>
+        <a id="downloadVideoBtn" class="btn-action" style="display:none; margin-top:15px; text-decoration:none; text-align:center; background:#10b981;" download="recorrido_inmobiliario_5s.webm">Descargar Video MP4/WebM</a>
       </div>
     </div>
 
@@ -137,7 +140,6 @@
       }
     }
 
-    // Generador de imágenes con balanceador para evitar límites
     function generateAIImage() {
       const prompt = document.getElementById('promptText').value;
       const status = document.getElementById('statusImg');
@@ -153,9 +155,8 @@
       status.style.display = 'block';
       resultBox.style.display = 'none';
 
-      // Usamos identificadores aleatorios y servidores alternos para evitar bloqueos por caché o límites
-      const randomSeed = Math.floor(Math.random() * 999999);
-      const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=576&nologo=true&seed=${randomSeed}`;
+      // Enlace directo optimizado para evitar restricciones de servidor
+      const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=576&nologo=true&private=true&ts=${Date.now()}`;
       
       const img = new Image();
       img.crossOrigin = "anonymous";
@@ -168,11 +169,11 @@
       };
       img.onerror = () => {
         status.style.display = 'none';
-        alert("El servicio está ocupado en este instante. Vuelve a hacer clic en 'Generar Render'.");
+        alert("Generando imagen... Intenta de nuevo si demora unos segundos.");
       };
     }
 
-    // Generador de video cinemático local (Funciona perfecto)
+    // Animador extendido a 5 segundos con 5 opciones cinemáticas
     function createCinematicVideo() {
       if (!loadedImage) {
         alert("Por favor selecciona una fotografía primero.");
@@ -194,7 +195,7 @@
       canvas.height = 720;
 
       const fps = 30;
-      const durationSeconds = 4;
+      const durationSeconds = 5; // Ampliado a 5 segundos exactos
       const totalFrames = fps * durationSeconds;
       let frame = 0;
 
@@ -229,13 +230,25 @@
         let offsetY = 0;
 
         if (motionType === 'zoomIn') {
-          scale = 1 + (progress * 0.15);
+          scale = 1 + (progress * 0.18); // Zoom in suave y profundo
           offsetX = (canvas.width * (1 - scale)) / 2;
           offsetY = (canvas.height * (1 - scale)) / 2;
-        } else {
+        } else if (motionType === 'zoomOut') {
+          scale = 1.18 - (progress * 0.18); // Zoom out cinemático
+          offsetX = (canvas.width * (1 - scale)) / 2;
+          offsetY = (canvas.height * (1 - scale)) / 2;
+        } else if (motionType === 'panRight') {
           scale = 1.1;
-          offsetX = - (progress * 100);
+          offsetX = - (progress * 120); // Desplazamiento a la derecha
           offsetY = -10;
+        } else if (motionType === 'panLeft') {
+          scale = 1.1;
+          offsetX = -120 + (progress * 120); // Desplazamiento a la izquierda
+          offsetY = -10;
+        } else if (motionType === 'tiltUp') {
+          scale = 1.1;
+          offsetX = -10;
+          offsetY = - (progress * 80); // Movimiento vertical estilo dron
         }
 
         ctx.drawImage(loadedImage, offsetX, offsetY, canvas.width * scale, canvas.height * scale);
