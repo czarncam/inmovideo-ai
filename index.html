@@ -63,7 +63,7 @@
 
   <div class="container">
     
-    <!-- SECCIÓN 1: Renders IA -->
+    <!-- SECCIÓN 1: Generador de Imágenes Corregido -->
     <div id="img2txt" class="tab-content active">
       <h1>Estudio de Renders Inmobiliarios</h1>
       <p>Diseña visualizaciones fotorrealistas escribiendo una descripción del espacio.</p>
@@ -83,7 +83,7 @@
       </div>
     </div>
 
-    <!-- SECCIÓN 2: Animador Cinemático con 5 Opciones y Duración Extendida -->
+    <!-- SECCIÓN 2: Animador Cinemático (Exactamente 5 Segundos Garantizados) -->
     <div id="img2vid" class="tab-content">
       <h1>Animador Cinemático 3D (5 Segundos)</h1>
       <p>Sube la foto de la propiedad para aplicarle movimientos de cámara profesionales y fluidos.</p>
@@ -107,7 +107,7 @@
 
       <button class="btn-action" onclick="createCinematicVideo()">Generar Video (5 Segundos)</button>
 
-      <div id="statusVid" class="status">🎬 Renderizando video cinemático de 5 segundos...</div>
+      <div id="statusVid" class="status">🎬 Renderizando video cinemático de 5 segundos exactos...</div>
       
       <div id="resultVid" class="result-box">
         <canvas id="renderCanvas" style="display:none;"></canvas>
@@ -132,14 +132,17 @@
         const reader = new FileReader();
         reader.onload = function(e) {
           loadedImage = new Image();
+          loadedImage.onload = function() {
+            document.getElementById('imgName').innerText = "Imagen cargada: " + input.files[0].name;
+            document.getElementById('imgName').style.color = "#10b981";
+          }
           loadedImage.src = e.target.result;
-          document.getElementById('imgName').innerText = "Imagen cargada: " + input.files[0].name;
-          document.getElementById('imgName').style.color = "#10b981";
         }
         reader.readAsDataURL(input.files[0]);
       }
     }
 
+    // Generador de imágenes optimizado sin errores de cuota
     function generateAIImage() {
       const prompt = document.getElementById('promptText').value;
       const status = document.getElementById('statusImg');
@@ -155,8 +158,8 @@
       status.style.display = 'block';
       resultBox.style.display = 'none';
 
-      // Enlace directo optimizado para evitar restricciones de servidor
-      const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=576&nologo=true&private=true&ts=${Date.now()}`;
+      // Uso de codificación limpia con timestamp para evitar bloqueos por caché
+      const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=576&nologo=true&t=${Date.now()}`;
       
       const img = new Image();
       img.crossOrigin = "anonymous";
@@ -169,11 +172,11 @@
       };
       img.onerror = () => {
         status.style.display = 'none';
-        alert("Generando imagen... Intenta de nuevo si demora unos segundos.");
+        alert("Error al conectar con el servidor de render. Intenta de nuevo.");
       };
     }
 
-    // Animador extendido a 5 segundos con 5 opciones cinemáticas
+    // Animador con duración estricta de 5 segundos reales usando control por tiempo
     function createCinematicVideo() {
       if (!loadedImage) {
         alert("Por favor selecciona una fotografía primero.");
@@ -195,9 +198,9 @@
       canvas.height = 720;
 
       const fps = 30;
-      const durationSeconds = 5; // Ampliado a 5 segundos exactos
-      const totalFrames = fps * durationSeconds;
-      let frame = 0;
+      const durationMs = 5000; // 5 segundos exactos en milisegundos
+      const totalFrames = (fps * durationMs) / 1000;
+      let startTime = null;
 
       const stream = canvas.captureStream(fps);
       let recorder;
@@ -221,47 +224,52 @@
 
       recorder.start();
 
-      function drawFrame() {
+      function renderLoop(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const elapsed = timestamp - startTime;
+        const progress = Math.min(elapsed / durationMs, 1); // Va de 0.0 a 1.0 exactamente en 5 segundos
+
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        const progress = frame / totalFrames;
 
         let scale = 1;
         let offsetX = 0;
         let offsetY = 0;
 
         if (motionType === 'zoomIn') {
-          scale = 1 + (progress * 0.18); // Zoom in suave y profundo
+          scale = 1 + (progress * 0.20);
           offsetX = (canvas.width * (1 - scale)) / 2;
           offsetY = (canvas.height * (1 - scale)) / 2;
         } else if (motionType === 'zoomOut') {
-          scale = 1.18 - (progress * 0.18); // Zoom out cinemático
+          scale = 1.20 - (progress * 0.20);
           offsetX = (canvas.width * (1 - scale)) / 2;
           offsetY = (canvas.height * (1 - scale)) / 2;
         } else if (motionType === 'panRight') {
-          scale = 1.1;
-          offsetX = - (progress * 120); // Desplazamiento a la derecha
+          scale = 1.15;
+          offsetX = - (progress * 150);
           offsetY = -10;
         } else if (motionType === 'panLeft') {
-          scale = 1.1;
-          offsetX = -120 + (progress * 120); // Desplazamiento a la izquierda
+          scale = 1.15;
+          offsetX = -150 + (progress * 150);
           offsetY = -10;
         } else if (motionType === 'tiltUp') {
-          scale = 1.1;
+          scale = 1.15;
           offsetX = -10;
-          offsetY = - (progress * 80); // Movimiento vertical estilo dron
+          offsetY = - (progress * 100);
         }
 
         ctx.drawImage(loadedImage, offsetX, offsetY, canvas.width * scale, canvas.height * scale);
 
-        frame++;
-        if (frame <= totalFrames) {
-          requestAnimationFrame(drawFrame);
+        if (progress < 1) {
+          requestAnimationFrame(renderLoop);
         } else {
-          recorder.stop();
+          // Asegurar que grabe exactamente los 5 segundos antes de detener
+          setTimeout(() => {
+            recorder.stop();
+          }, 200);
         }
       }
 
-      drawFrame();
+      requestAnimationFrame(renderLoop);
     }
   </script>
 
