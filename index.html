@@ -4,71 +4,329 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>InmoVideo AI Studio Pro</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-color: #0b0f19;
       --card-bg: #111827;
+      --card-hover: #1f2937;
       --accent-color: #3b82f6;
       --accent-hover: #2563eb;
+      --success-color: #10b981;
+      --success-hover: #059669;
       --text-main: #f3f4f6;
       --text-muted: #9ca3af;
       --border-color: #1f2937;
+      --input-bg: #030712;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-    body { background-color: var(--bg-color); color: var(--text-main); display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; }
     
-    nav { width: 100%; max-width: 750px; display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; margin-bottom: 25px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; }
-    .logo { font-size: 1.1rem; font-weight: 700; color: #60a5fa; }
-    .nav-links { display: flex; gap: 6px; flex-wrap: wrap; }
-    .nav-btn { background: transparent; border: none; color: var(--text-muted); font-size: 0.8rem; font-weight: 600; cursor: pointer; padding: 8px 12px; border-radius: 8px; transition: 0.2s; }
-    .nav-btn.active, .nav-btn:hover { color: white; background: var(--accent-color); }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 24px 16px;
+    }
 
-    .container { background: var(--card-bg); width: 100%; max-width: 750px; padding: 35px; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 15px 35px rgba(0,0,0,0.5); text-align: center; }
-    
+    /* Top Navigation */
+    nav {
+      width: 100%;
+      max-width: 820px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 20px;
+      margin-bottom: 24px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .logo {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #60a5fa;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 8px 14px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-btn.active {
+      color: #ffffff;
+      background: var(--accent-color);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Main Container */
+    .container {
+      background: var(--card-bg);
+      width: 100%;
+      max-width: 820px;
+      padding: 32px;
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      text-align: center;
+    }
+
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    h1 { font-size: 1.5rem; font-weight: 700; color: var(--text-main); margin-bottom: 8px; }
-    p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 25px; line-height: 1.4; }
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
 
-    .form-group { text-align: left; margin-bottom: 20px; }
-    label { font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 8px; font-weight: 600; text-transform: uppercase; }
-    input[type="text"], select { width: 100%; background: #030712; border: 1px solid var(--border-color); color: var(--text-main); padding: 12px; border-radius: 8px; font-size: 0.9rem; outline: none; }
+    p.subtitle {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
 
-    .upload-box { border: 2px dashed var(--border-color); border-radius: 10px; padding: 25px; text-align: center; cursor: pointer; transition: 0.3s; margin-bottom: 20px; background: #030712; }
-    .upload-box:hover { border-color: var(--accent-color); }
+    /* Inputs & Selects */
+    .form-group {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    input[type="text"], select {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus, select:focus {
+      border-color: var(--accent-color);
+    }
+
+    /* File Upload Drop Zone */
+    .upload-box {
+      border: 2px dashed var(--border-color);
+      border-radius: 12px;
+      padding: 28px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 20px;
+      background: var(--input-bg);
+    }
+
+    .upload-box:hover {
+      border-color: var(--accent-color);
+      background: rgba(59, 130, 246, 0.03);
+    }
+
     .upload-box input { display: none; }
 
-    /* Estilos para el Ordenador de Imágenes */
-    .sequence-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; text-align: left; }
-    .sequence-item { display: flex; align-items: center; justify-content: space-between; background: #030712; border: 1px solid var(--border-color); padding: 10px 15px; border-radius: 8px; }
-    .sequence-item img { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; }
-    .sequence-info { flex: 1; margin-left: 15px; font-size: 0.85rem; font-weight: 600; }
-    .sequence-badge { background: var(--accent-color); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; margin-right: 8px; }
-    .sequence-controls { display: flex; gap: 5px; }
-    .btn-small { background: #1f2937; color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
+    /* Buttons */
+    .btn-action {
+      width: 100%;
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: inline-block;
+      text-decoration: none;
+    }
+
+    .btn-action:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-success {
+      background: var(--success-color);
+    }
+
+    .btn-success:hover {
+      background: var(--success-hover);
+    }
+
+    /* Sequence List for Auto-Reel */
+    .sequence-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+      text-align: left;
+    }
+
+    .sequence-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--input-bg);
+      border: 1px solid var(--border-color);
+      padding: 12px 16px;
+      border-radius: 10px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .sequence-thumb-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 220px;
+    }
+
+    .sequence-item img {
+      width: 58px;
+      height: 58px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+    }
+
+    .sequence-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sequence-filename {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-main);
+      word-break: break-all;
+    }
+
+    .sequence-badge {
+      display: inline-block;
+      background: rgba(59, 130, 246, 0.2);
+      color: #60a5fa;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      width: fit-content;
+    }
+
+    .type-select-container {
+      width: 190px;
+    }
+
+    .sequence-controls {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-small {
+      background: #1f2937;
+      color: white;
+      border: 1px solid var(--border-color);
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.78rem;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
     .btn-small:hover { background: #374151; }
-    .btn-danger { background: #991b1b; }
-    .btn-danger:hover { background: #dc2626; }
+    .btn-danger { background: #7f1d1d; border-color: #991b1b; }
+    .btn-danger:hover { background: #991b1b; }
 
-    .btn-action { width: 100%; background: var(--accent-color); color: white; border: none; padding: 14px; border-radius: 8px; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: 0.2s; }
-    .btn-action:hover { background: var(--accent-hover); }
+    /* Dynamic Status Feedback */
+    .status {
+      margin-top: 18px;
+      font-size: 0.88rem;
+      color: #60a5fa;
+      display: none;
+      font-weight: 500;
+      background: rgba(59, 130, 246, 0.1);
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
 
-    .status { margin-top: 15px; font-size: 0.85rem; color: #60a5fa; display: none; font-weight: 500; }
-    .result-box { margin-top: 25px; display: none; text-align: center; }
-    
-    canvas { width: 100%; max-height: 380px; border-radius: 10px; border: 1px solid var(--border-color); background: #000; }
-    video { width: 100%; max-height: 380px; border-radius: 10px; border: 1px solid var(--border-color); margin-top: 15px; }
+    /* Video & Preview Displays */
+    .result-box {
+      margin-top: 24px;
+      display: none;
+      text-align: center;
+    }
+
+    video {
+      width: 100%;
+      max-height: 420px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      margin-top: 12px;
+      background: #000000;
+    }
+
+    /* Responsive Grid Adjustments */
+    @media (max-width: 640px) {
+      .container { padding: 20px 16px; }
+      nav { flex-direction: column; gap: 12px; }
+      .nav-links { justify-content: center; width: 100%; }
+      .sequence-item { flex-direction: column; align-items: flex-start; }
+      .type-select-container { width: 100%; }
+      .sequence-controls { width: 100%; justify-content: flex-end; }
+    }
   </style>
 </head>
 <body>
 
+  <!-- Navigation Bar -->
   <nav>
-    <div class="logo">🏢 InmoVideo AI Studio</div>
+    <div class="logo">🏢 InmoVideo AI Studio Pro</div>
     <div class="nav-links">
-      <button class="nav-btn active" onclick="switchTab('img2txt', event)">Renders</button>
+      <button class="nav-btn active" onclick="switchTab('img2txt', event)">Generador de Renders</button>
       <button class="nav-btn" onclick="switchTab('img2vid', event)">Foto Individual</button>
       <button class="nav-btn" onclick="switchTab('autoreel', event)">🎬 Auto-Reel Múltiple</button>
     </div>
@@ -76,87 +334,100 @@
 
   <div class="container">
     
-    <!-- SECCIÓN 1: Generador de Renders -->
+    <!-- SECCIÓN 1: Generador de Renders AI -->
     <div id="img2txt" class="tab-content active">
       <h1>Estudio de Renders Inmobiliarios</h1>
-      <p>Diseña visualizaciones fotorrealistas escribiendo una descripción del espacio.</p>
+      <p class="subtitle">Genera imágenes arquitectónicas de alta calidad fotorrealista para espacios interiores y exteriores.</p>
 
       <div class="form-group">
-        <label>Descripción del Inmueble (Prompt):</label>
-        <input type="text" id="promptText" value="Luxurious modern living room, marble floors, large glass windows with sunset city view, architectural photography, 8k">
+        <label for="promptText">Descripción del Inmueble (Prompt):</label>
+        <input type="text" id="promptText" value="Luxurious modern living room, double height ceiling, marble floors, large glass windows with sunset city view, architectural photography, 8k">
       </div>
 
-      <button class="btn-action" onclick="generateAIImage()">Generar Render</button>
+      <button class="btn-action" onclick="generateAIImage()">Generar Render con IA</button>
       
-      <div id="statusImg" class="status">⚡ Creando imagen fotorrealista...</div>
+      <div id="statusImg" class="status">⚡ Conectando con servidor de IA y renderizando espacio...</div>
       
       <div id="resultImg" class="result-box">
-        <img id="outputImage" src="" alt="Render" style="width:100%; border-radius:8px;">
-        <a id="downloadImg" href="#" download="render.jpg" class="btn-action" style="display:block; margin-top:15px; text-decoration:none; text-align:center; background:#10b981;">Descargar Imagen</a>
+        <img id="outputImage" src="" alt="Render inmobiliario" style="width:100%; border-radius:10px; border: 1px solid var(--border-color);">
+        <a id="downloadImg" href="#" download="render_inmobiliario.jpg" class="btn-action btn-success" style="margin-top:16px;">Descargar Render HD</a>
       </div>
     </div>
 
-    <!-- SECCIÓN 2: Animador Foto Individual -->
+    <!-- SECCIÓN 2: Animador Foto Individual (5 Segundos) -->
     <div id="img2vid" class="tab-content">
-      <h1>Animador Cinemático 3D (5 Segundos)</h1>
-      <p>Sube una foto para aplicarle movimiento de cámara profesional.</p>
+      <h1>Animador Cinemático (Foto Individual)</h1>
+      <p class="subtitle">Aplica movimientos de cámara profesionales a una sola fotografía durante 5 segundos exactos.</p>
 
       <div class="upload-box" onclick="document.getElementById('videoImageInput').click()">
         <span style="color: #60a5fa; font-weight: 600; font-size: 0.95rem;">📸 Cargar fotografía de la propiedad</span>
-        <input type="file" id="videoImageInput" accept="image/*" onchange="previewFile(this)">
-        <p id="imgName" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">Formatos admitidos: JPG, PNG</p>
+        <input type="file" id="videoImageInput" accept="image/*" onchange="previewSingleFile(this)">
+        <p id="singleImgName" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">Formatos admitidos: JPG, PNG</p>
       </div>
 
       <div class="form-group">
-        <label>Movimiento de Cámara:</label>
+        <label for="cameraMotion">Movimiento de Cámara Manual:</label>
         <select id="cameraMotion">
-          <option value="zoomIn">Acercamiento Elegante (Zoom In)</option>
+          <option value="zoomIn">Acercamiento Elegante (Push-in / Zoom In)</option>
           <option value="zoomOut">Alejamiento de Espacio (Zoom Out)</option>
-          <option value="panRight">Panorámica Horizontal Derecha</option>
-          <option value="panLeft">Panorámica Horizontal Izquierda</option>
+          <option value="panRight">Panorámica Horizontal Derecha (Pan Right)</option>
+          <option value="panLeft">Panorámica Horizontal Izquierda (Pan Left)</option>
           <option value="tiltUp">Efecto Dron Ascendente (Tilt Up)</option>
         </select>
       </div>
 
-      <button class="btn-action" onclick="createCinematicVideo()">Generar Video (5s)</button>
+      <button class="btn-action" onclick="createCinematicVideo()">Generar Animación (5s)</button>
 
-      <div id="statusVid" class="status">🎬 Renderizando video cinemático...</div>
+      <div id="statusVid" class="status">🎬 Renderizando movimiento cinemático de 5 segundos...</div>
       
       <div id="resultVid" class="result-box">
         <video id="outputVideo" controls autoplay loop></video>
-        <a id="downloadVideoBtn" class="btn-action" style="display:none; margin-top:15px; text-decoration:none; text-align:center; background:#10b981;" download="recorrido_inmobiliario_5s.webm">Descargar Video</a>
+        <a id="downloadVideoBtn" class="btn-action btn-success" style="display:none; margin-top:16px;" download="animacion_inmobiliaria_5s.webm">Descargar Video WebM/MP4</a>
       </div>
     </div>
 
-    <!-- SECCIÓN 3: AUTO-REEL MÚLTIPLE CON ORDENAMIENTO -->
+    <!-- SECCIÓN 3: Auto-Reel Múltiple Cinematográfico -->
     <div id="autoreel" class="tab-content">
-      <h1>Generador Auto-Reel Inmobiliario</h1>
-      <p>Sube las fotos y ordénalas en la secuencia exacta que quieres que aparezcan en el recorrido.</p>
+      <h1>Auto-Reel Cinematográfico Multitoma</h1>
+      <p class="subtitle">Une múltiples imágenes en un recorrido inmobiliario fluido con movimientos inteligentes de cámara y transiciones en fundido cruzado.</p>
 
       <div class="upload-box" onclick="document.getElementById('multiImageInput').click()">
-        <span style="color: #60a5fa; font-weight: 600; font-size: 0.95rem;">📁 Seleccionar fotografías de la propiedad</span>
+        <span style="color: #60a5fa; font-weight: 600; font-size: 0.95rem;">📁 Cargar grupo de fotos de la propiedad</span>
         <input type="file" id="multiImageInput" accept="image/*" multiple onchange="previewMultiFiles(this)">
-        <p id="multiCount" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">Ninguna imagen seleccionada</p>
+        <p id="multiCount" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">Selecciona fachadas, salas, cocinas, recámaras y baños...</p>
       </div>
 
-      <!-- Lista de Secuencia Reordenable -->
+      <!-- Configuración General del Reel -->
+      <div class="form-group" style="display: flex; gap: 16px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 200px;">
+          <label for="shotDuration">Duración por Toma (Segundos):</label>
+          <select id="shotDuration">
+            <option value="3">3 Segundos (Dinámico / Redes)</option>
+            <option value="4" selected>4 Segundos (Recomendado / Elegante)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Lista de Secuencia Reordenable y Clasificable -->
       <div id="sequenceContainer" class="sequence-list"></div>
 
       <button id="btnBuildReel" class="btn-action" style="display:none;" onclick="createAutoReel()">Generar Auto-Reel Completo</button>
 
-      <div id="statusReel" class="status">🎬 Uniendo secuencia ordenada y procesando transiciones (3s por foto)...</div>
+      <div id="statusReel" class="status">🎬 Procesando secuencia universal, aplicando movimientos de cámara y fundidos cruzados...</div>
       
       <div id="resultReel" class="result-box">
         <video id="outputReelVideo" controls autoplay loop></video>
-        <a id="downloadReelBtn" class="btn-action" style="display:none; margin-top:15px; text-decoration:none; text-align:center; background:#10b981;" download="inmovideo_autoreel_secuencia.webm">Descargar Auto-Reel MP4/WebM</a>
+        <a id="downloadReelBtn" class="btn-action btn-success" style="display:none; margin-top:16px;" download="autoreel_inmobiliario.webm">Descargar Reel Cinematográfico</a>
       </div>
     </div>
 
   </div>
 
+  <!-- Offscreen Canvas for Video Generation -->
   <canvas id="renderCanvas" style="display:none;"></canvas>
 
   <script>
+    // Tab Switching Logic
     function switchTab(tabId, evt) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
@@ -164,26 +435,167 @@
       evt.currentTarget.classList.add('active');
     }
 
-    let loadedImage = null;
-    function previewFile(input) {
+    /* ------------------------------------------------------------------
+       1. GENERADOR DE RENDERS AI (Pollinations API con Fallbacks)
+    ------------------------------------------------------------------ */
+    function generateAIImage() {
+      const prompt = document.getElementById('promptText').value;
+      const status = document.getElementById('statusImg');
+      const resultBox = document.getElementById('resultImg');
+      const outputImg = document.getElementById('outputImage');
+      const downloadBtn = document.getElementById('downloadImg');
+
+      if (!prompt.trim()) {
+        alert("Por favor ingresa una descripción para el render.");
+        return;
+      }
+
+      status.style.display = 'block';
+      resultBox.style.display = 'none';
+
+      const randomSeed = Math.floor(Math.random() * 1000000);
+      const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1280&height=720&nologo=true&seed=${randomSeed}&t=${Date.now()}`;
+      
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.src = imageUrl;
+      
+      img.onload = () => {
+        outputImg.src = imageUrl;
+        downloadBtn.href = imageUrl;
+        status.style.display = 'none';
+        resultBox.style.display = 'block';
+      };
+
+      img.onerror = () => {
+        // Fallback endpoint
+        const fallbackUrl = `https://pollinations.ai/p/${encodeURIComponent(prompt)}?width=1280&height=720&nologo=true`;
+        outputImg.src = fallbackUrl;
+        downloadBtn.href = fallbackUrl;
+        status.style.display = 'none';
+        resultBox.style.display = 'block';
+      };
+    }
+
+    /* ------------------------------------------------------------------
+       2. ANIMADOR DE FOTO INDIVIDUAL (5 SEGUNDOS EXACTOS)
+    ------------------------------------------------------------------ */
+    let singleLoadedImage = null;
+
+    function previewSingleFile(input) {
       if (input.files && input.files[0]) {
         const reader = new FileReader();
         reader.onload = function(e) {
-          loadedImage = new Image();
-          loadedImage.src = e.target.result;
-          document.getElementById('imgName').innerText = "Imagen cargada: " + input.files[0].name;
-          document.getElementById('imgName').style.color = "#10b981";
-        }
+          singleLoadedImage = new Image();
+          singleLoadedImage.onload = function() {
+            document.getElementById('singleImgName').innerText = "Imagen cargada: " + input.files[0].name;
+            document.getElementById('singleImgName').style.color = "#10b981";
+          };
+          singleLoadedImage.src = e.target.result;
+        };
         reader.readAsDataURL(input.files[0]);
       }
     }
 
-    // Estructura para administrar la secuencia ordenada de imágenes
+    function createCinematicVideo() {
+      if (!singleLoadedImage) {
+        alert("Por favor selecciona una fotografía primero.");
+        return;
+      }
+
+      const status = document.getElementById('statusVid');
+      const resultVid = document.getElementById('resultVid');
+      const canvas = document.getElementById('renderCanvas');
+      const outputVideo = document.getElementById('outputVideo');
+      const downloadVideoBtn = document.getElementById('downloadVideoBtn');
+      const motionType = document.getElementById('cameraMotion').value;
+
+      status.style.display = 'block';
+      resultVid.style.display = 'none';
+
+      const ctx = canvas.getContext('2d');
+      canvas.width = 1280;
+      canvas.height = 720;
+
+      const fps = 30;
+      const durationMs = 5000; // 5 segundos exactos
+      let startTime = null;
+
+      const stream = canvas.captureStream(fps);
+      let recorder;
+      try {
+        recorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9' });
+      } catch (e) {
+        recorder = new MediaRecorder(stream);
+      }
+
+      const chunks = [];
+      recorder.ondataavailable = e => chunks.push(e.data);
+      recorder.onstop = () => {
+        const blob = new Blob(chunks, { type: 'video/webm' });
+        const videoUrl = URL.createObjectURL(blob);
+        outputVideo.src = videoUrl;
+        downloadVideoBtn.href = videoUrl;
+        downloadVideoBtn.style.display = 'block';
+        status.style.display = 'none';
+        resultVid.style.display = 'block';
+      };
+
+      recorder.start();
+
+      function renderSingleLoop(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const elapsed = timestamp - startTime;
+        const progress = Math.min(elapsed / durationMs, 1);
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        let scale = 1;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        if (motionType === 'zoomIn') {
+          scale = 1 + (progress * 0.18);
+          offsetX = (canvas.width * (1 - scale)) / 2;
+          offsetY = (canvas.height * (1 - scale)) / 2;
+        } else if (motionType === 'zoomOut') {
+          scale = 1.18 - (progress * 0.18);
+          offsetX = (canvas.width * (1 - scale)) / 2;
+          offsetY = (canvas.height * (1 - scale)) / 2;
+        } else if (motionType === 'panRight') {
+          scale = 1.12;
+          offsetX = - (progress * 130);
+          offsetY = -5;
+        } else if (motionType === 'panLeft') {
+          scale = 1.12;
+          offsetX = -130 + (progress * 130);
+          offsetY = -5;
+        } else if (motionType === 'tiltUp') {
+          scale = 1.12;
+          offsetX = -5;
+          offsetY = - (progress * 90);
+        }
+
+        ctx.drawImage(singleLoadedImage, offsetX, offsetY, canvas.width * scale, canvas.height * scale);
+
+        if (progress < 1) {
+          requestAnimationFrame(renderSingleLoop);
+        } else {
+          setTimeout(() => { recorder.stop(); }, 200);
+        }
+      }
+
+      requestAnimationFrame(renderSingleLoop);
+    }
+
+    /* ------------------------------------------------------------------
+       3. AUTO-REEL MÚLTIPLE (SECUENCIA UNIVERSAL Y TRANSICIONES)
+    ------------------------------------------------------------------ */
     let multiImagesLoaded = [];
 
     function previewMultiFiles(input) {
       if (input.files && input.files.length > 0) {
-        let filesArray = Array.from(input.files);
+        const filesArray = Array.from(input.files);
         let loadedCount = 0;
 
         filesArray.forEach(file => {
@@ -194,7 +606,8 @@
               multiImagesLoaded.push({
                 name: file.name,
                 src: e.target.result,
-                imgObj: img
+                imgObj: img,
+                spaceType: 'auto' // auto, wide, detail, closing
               });
               loadedCount++;
               if (loadedCount === filesArray.length) {
@@ -222,18 +635,32 @@
         return;
       }
 
-      countLabel.innerText = `${multiImagesLoaded.length} imágenes cargadas. Define la secuencia abajo:`;
+      countLabel.innerText = `${multiImagesLoaded.length} fotografías en la secuencia. Asigna espacio u ordena abajo:`;
       countLabel.style.color = "#10b981";
       btnBuild.style.display = 'block';
 
       multiImagesLoaded.forEach((item, index) => {
         const itemEl = document.createElement('div');
         itemEl.className = 'sequence-item';
+        
         itemEl.innerHTML = `
-          <img src="${item.src}" alt="Thumb">
-          <div class="sequence-info">
-            <span class="sequence-badge">Paso ${index + 1}</span> ${item.name}
+          <div class="sequence-thumb-container">
+            <img src="${item.src}" alt="Thumb">
+            <div class="sequence-info">
+              <span class="sequence-badge">Paso ${index + 1}</span>
+              <span class="sequence-filename">${item.name}</span>
+            </div>
           </div>
+
+          <div class="type-select-container">
+            <select onchange="updateSpaceType(${index}, this.value)">
+              <option value="auto" ${item.spaceType === 'auto' ? 'selected' : ''}>🤖 Tipo: Automático</option>
+              <option value="wide" ${item.spaceType === 'wide' ? 'selected' : ''}>🏛️ Espacio Amplio / Fachada</option>
+              <option value="detail" ${item.spaceType === 'detail' ? 'selected' : ''}>🚪 Espacio Cerrado / Detalle</option>
+              <option value="closing" ${item.spaceType === 'closing' ? 'selected' : ''}>🏁 Cierre / Fachada Final</option>
+            </select>
+          </div>
+
           <div class="sequence-controls">
             <button class="btn-small" onclick="moveItem(${index}, -1)">⬆️ Subir</button>
             <button class="btn-small" onclick="moveItem(${index}, 1)">⬇️ Bajar</button>
@@ -242,6 +669,12 @@
         `;
         container.appendChild(itemEl);
       });
+    }
+
+    function updateSpaceType(index, type) {
+      if (multiImagesLoaded[index]) {
+        multiImagesLoaded[index].spaceType = type;
+      }
     }
 
     function moveItem(index, direction) {
@@ -259,138 +692,61 @@
       renderSequenceUI();
     }
 
-    // Generador de Renders
-    function generateAIImage() {
-      const prompt = document.getElementById('promptText').value;
-      const status = document.getElementById('statusImg');
-      const resultBox = document.getElementById('resultImg');
-      const outputImg = document.getElementById('outputImage');
-      const downloadBtn = document.getElementById('downloadImg');
+    // Dibujo con transformación dinámica de cámara según el tipo de plano
+    function drawTransformFrame(ctx, canvas, imgObj, progress, spaceType, index) {
+      let scale = 1;
+      let offsetX = 0;
+      let offsetY = 0;
 
-      if (!prompt.trim()) {
-        alert("Escribe una descripción.");
-        return;
+      // Determinación de modo de animación (Apertura, Amplio, Detalle o Cierre)
+      let resolvedMode = spaceType;
+
+      if (resolvedMode === 'auto') {
+        if (index === 0) resolvedMode = 'opening';
+        else if (index === multiImagesLoaded.length - 1) resolvedMode = 'closing';
+        else resolvedMode = (index % 2 === 1) ? 'wide' : 'detail';
       }
 
-      status.style.display = 'block';
-      resultBox.style.display = 'none';
-
-      const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=576&nologo=true&seed=${Math.floor(Math.random() * 100000)}`;
-      
-      const img = new Image();
-      img.crossOrigin = "anonymous";
-      img.src = imageUrl;
-      img.onload = () => {
-        outputImg.src = imageUrl;
-        downloadBtn.href = imageUrl;
-        status.style.display = 'none';
-        resultBox.style.display = 'block';
-      };
-      img.onerror = () => {
-        const fallbackUrl = `https://pollinations.ai/p/${encodeURIComponent(prompt)}?width=1024&height=576&nologo=true`;
-        outputImg.src = fallbackUrl;
-        downloadBtn.href = fallbackUrl;
-        status.style.display = 'none';
-        resultBox.style.display = 'block';
-      };
-    }
-
-    // Animador Individual (5 Segundos)
-    function createCinematicVideo() {
-      if (!loadedImage) {
-        alert("Por favor selecciona una fotografía primero.");
-        return;
+      if (index === 0 && spaceType === 'auto') {
+        resolvedMode = 'opening';
       }
 
-      const status = document.getElementById('statusVid');
-      const resultVid = document.getElementById('resultVid');
-      const canvas = document.getElementById('renderCanvas');
-      const outputVideo = document.getElementById('outputVideo');
-      const downloadVideoBtn = document.getElementById('downloadVideoBtn');
-      const motionType = document.getElementById('cameraMotion').value;
-
-      status.style.display = 'block';
-      resultVid.style.display = 'none';
-
-      const ctx = canvas.getContext('2d');
-      canvas.width = 1280;
-      canvas.height = 720;
-
-      const fps = 30;
-      const durationMs = 5000;
-      let startTime = null;
-
-      const stream = canvas.captureStream(fps);
-      let recorder;
-      try {
-        recorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9' });
-      } catch (e) {
-        recorder = new MediaRecorder(stream);
-      }
-
-      const chunks = [];
-      recorder.ondataavailable = e => chunks.push(e.data);
-      recorder.onstop = () => {
-        const blob = new Blob(chunks, { type: 'video/webm' });
-        const videoUrl = URL.createObjectURL(blob);
-        outputVideo.src = videoUrl;
-        downloadVideoBtn.href = videoUrl;
-        downloadVideoBtn.style.display = 'block';
-        status.style.display = 'none';
-        resultVid.style.display = 'block';
-      };
-
-      recorder.start();
-
-      function renderLoop(timestamp) {
-        if (!startTime) startTime = timestamp;
-        const elapsed = timestamp - startTime;
-        const progress = Math.min(elapsed / durationMs, 1);
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        let scale = 1;
-        let offsetX = 0;
-        let offsetY = 0;
-
-        if (motionType === 'zoomIn') {
-          scale = 1 + (progress * 0.20);
-          offsetX = (canvas.width * (1 - scale)) / 2;
-          offsetY = (canvas.height * (1 - scale)) / 2;
-        } else if (motionType === 'zoomOut') {
-          scale = 1.20 - (progress * 0.20);
-          offsetX = (canvas.width * (1 - scale)) / 2;
-          offsetY = (canvas.height * (1 - scale)) / 2;
-        } else if (motionType === 'panRight') {
-          scale = 1.15;
-          offsetX = - (progress * 150);
+      // Aplicar patrón de movimiento cinemático
+      if (resolvedMode === 'opening') {
+        // Foto 1: Push-in frontal suave
+        scale = 1 + (progress * 0.16);
+        offsetX = (canvas.width * (1 - scale)) / 2;
+        offsetY = (canvas.height * (1 - scale)) / 2;
+      } else if (resolvedMode === 'wide') {
+        // Paneo lateral + Zoom in sutil para dar sensación 3D
+        scale = 1.05 + (progress * 0.10);
+        offsetX = - (progress * 90);
+        offsetY = (canvas.height * (1 - scale)) / 2;
+      } else if (resolvedMode === 'detail') {
+        // Desplazamiento lateral corto o Tilt suave
+        if (index % 2 === 0) {
+          scale = 1.12;
+          offsetX = - (progress * 80);
           offsetY = -10;
-        } else if (motionType === 'panLeft') {
-          scale = 1.15;
-          offsetX = -150 + (progress * 150);
-          offsetY = -10;
-        } else if (motionType === 'tiltUp') {
-          scale = 1.15;
-          offsetX = -10;
-          offsetY = - (progress * 100);
-        }
-
-        ctx.drawImage(loadedImage, offsetX, offsetY, canvas.width * scale, canvas.height * scale);
-
-        if (progress < 1) {
-          requestAnimationFrame(renderLoop);
         } else {
-          setTimeout(() => { recorder.stop(); }, 200);
+          scale = 1.12;
+          offsetX = -10;
+          offsetY = - (progress * 70); // Tilt Up
         }
+      } else if (resolvedMode === 'closing') {
+        // Cámara fija con Zoom Out imperceptible
+        scale = 1.12 - (progress * 0.08);
+        offsetX = (canvas.width * (1 - scale)) / 2;
+        offsetY = (canvas.height * (1 - scale)) / 2;
       }
 
-      requestAnimationFrame(renderLoop);
+      ctx.drawImage(imgObj, offsetX, offsetY, canvas.width * scale, canvas.height * scale);
     }
 
-    // AUTO-REEL MÚLTIPLE EN SECUENCIA EXACTA (3 Segundos Reales por Foto)
+    // Render del Auto-Reel Universal con Transiciones de Fundido Cruzado
     function createAutoReel() {
       if (!multiImagesLoaded || multiImagesLoaded.length === 0) {
-        alert("Por favor selecciona al menos una imagen para crear el Auto-Reel.");
+        alert("Por favor sube al menos una imagen para generar el Auto-Reel.");
         return;
       }
 
@@ -399,6 +755,8 @@
       const canvas = document.getElementById('renderCanvas');
       const outputVideo = document.getElementById('outputReelVideo');
       const downloadBtn = document.getElementById('downloadReelBtn');
+      
+      const secondsPerShot = parseFloat(document.getElementById('shotDuration').value) || 4;
 
       status.style.display = 'block';
       resultReel.style.display = 'none';
@@ -408,10 +766,10 @@
       canvas.height = 720;
 
       const fps = 30;
-      const msPerImage = 3000; // 3 Segundos estrictos por imagen
-      const transitionMs = 500; // Transición suave de medio segundo
+      const msPerShot = secondsPerShot * 1000;
+      const transitionMs = 800; // Cross Dissolve de 0.8s
       const totalImages = multiImagesLoaded.length;
-      const totalDurationMs = totalImages * msPerImage;
+      const totalDurationMs = totalImages * msPerShot;
 
       const stream = canvas.captureStream(fps);
       let recorder;
@@ -441,42 +799,44 @@
         const totalElapsed = timestamp - startTime;
 
         if (totalElapsed >= totalDurationMs) {
+          // Fade to black final en los últimos ms
+          ctx.fillStyle = '#000000';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
           setTimeout(() => { recorder.stop(); }, 200);
           return;
         }
 
-        const currentImgIdx = Math.floor(totalElapsed / msPerImage);
-        const elapsedInCurrentImg = totalElapsed % msPerImage;
-        const progressInImg = elapsedInCurrentImg / msPerImage;
+        const currentIdx = Math.floor(totalElapsed / msPerShot);
+        const elapsedInShot = totalElapsed % msPerShot;
+        const progressInShot = elapsedInShot / msPerShot;
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        const currentItem = multiImagesLoaded[currentImgIdx];
+        const currentItem = multiImagesLoaded[currentIdx];
 
-        // Movimientos alternados según la toma
-        let scale = 1 + (progressInImg * 0.15);
-        let offsetX = (canvas.width * (1 - scale)) / 2;
-        let offsetY = (canvas.height * (1 - scale)) / 2;
-
-        if (currentImgIdx % 2 === 1) {
-          scale = 1.12;
-          offsetX = - (progressInImg * 120);
-          offsetY = -5;
-        }
-
+        // 1. Dibujar Toma Actual
         ctx.save();
-
-        // Transición de entrada (Fade in)
-        if (elapsedInCurrentImg < transitionMs && currentImgIdx > 0) {
-          ctx.globalAlpha = elapsedInCurrentImg / transitionMs;
-        }
-        // Transición de salida (Fade out)
-        else if (elapsedInCurrentImg > msPerImage - transitionMs && currentImgIdx < totalImages - 1) {
-          ctx.globalAlpha = (msPerImage - elapsedInCurrentImg) / transitionMs;
-        }
-
-        ctx.drawImage(currentItem.imgObj, offsetX, offsetY, canvas.width * scale, canvas.height * scale);
+        drawTransformFrame(ctx, canvas, currentItem.imgObj, progressInShot, currentItem.spaceType, currentIdx);
         ctx.restore();
+
+        // 2. Fundido Cruzado (Cross Dissolve) con la siguiente toma
+        if (elapsedInShot > (msPerShot - transitionMs) && currentIdx < totalImages - 1) {
+          const nextItem = multiImagesLoaded[currentIdx + 1];
+          const transitionProgress = (elapsedInShot - (msPerShot - transitionMs)) / transitionMs;
+          const nextShotProgress = (elapsedInShot - (msPerShot - transitionMs)) / msPerShot;
+
+          ctx.save();
+          ctx.globalAlpha = transitionProgress; // Aumento gradual de opacidad
+          drawTransformFrame(ctx, canvas, nextItem.imgObj, nextShotProgress, nextItem.spaceType, currentIdx + 1);
+          ctx.restore();
+        }
+
+        // 3. Fundido Final a Negro en la última toma (Fade to Black)
+        if (currentIdx === totalImages - 1 && elapsedInShot > (msPerShot - transitionMs)) {
+          const fadeOutProgress = (elapsedInShot - (msPerShot - transitionMs)) / transitionMs;
+          ctx.fillStyle = `rgba(0, 0, 0, ${fadeOutProgress})`;
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
 
         requestAnimationFrame(renderReelLoop);
       }
